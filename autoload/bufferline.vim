@@ -12,9 +12,7 @@ function! s:generate_names()
   while i <= last_buffer
     if bufexists(i) && buflisted(i)
       let modified = ' '
-      if getbufvar(i, '&mod')
-        let modified = g:bufferline_modified
-      endif
+      let is_modified = getbufvar(i, '&mod')
       let fname = fnamemodify(bufname(i), g:bufferline_fname_mod)
       let fname = substitute(fname, "%", "%%", "g")
 
@@ -29,9 +27,12 @@ function! s:generate_names()
       if !skip
         let name = ''
         if g:bufferline_show_bufnr != 0 && g:bufferline_status_info.count >= g:bufferline_show_bufnr
-          let name =  i . ':'
+          if is_modified
+            let name = i . g:bufferline_modified. fname
+          else
+            let name = i . ':' . fname
+          end
         endif
-        let name .= fname . modified
 
         if current_buffer == i
           let name = g:bufferline_active_buffer_left . name . g:bufferline_active_buffer_right
