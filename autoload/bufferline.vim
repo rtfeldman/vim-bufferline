@@ -16,6 +16,10 @@ function! s:generate_names()
       let fname = fnamemodify(bufname(i), g:bufferline_fname_mod)
       let fname = substitute(fname, "%", "%%", "g")
 
+      if last_buffer == 1 && fname == ''
+        return []
+      endif
+
       let skip = 0
       for ex in g:bufferline_excludes
         if match(fname, ex) > -1
